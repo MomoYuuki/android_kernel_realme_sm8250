@@ -6223,6 +6223,8 @@ bool oplus_wpc_get_ffc_charging(void)
 
 bool oplus_wpc_get_fw_updating(void)
 {
+	if (!g_rx_chip)
+		return false;
 	if (wlchg_rx_fw_updating(g_rx_chip)) {
 		chg_err("<~WPC~> FW is updating\n");
 		return true;
@@ -6380,21 +6382,6 @@ void __attribute__((weak)) oplus_dcin_irq_enable(void)
 	return;
 }
 
-struct oplus_wpc_operations p922x_ops = {
-	.wpc_get_wireless_charge_start = oplus_wpc_get_wireless_charge_start,
-	.wpc_get_fast_charging = oplus_wpc_get_fast_charging,
-	.wpc_get_otg_charging = oplus_wpc_get_otg_charging,
-	.wpc_get_ffc_charging = oplus_wpc_get_ffc_charging,
-	.wpc_get_fw_updating = oplus_wpc_get_fw_updating,
-	.wpc_get_adapter_type = oplus_wpc_get_adapter_type,
-	.wpc_set_vbat_en = oplus_wpc_set_vbat_en_val,
-	.wpc_set_booster_en = oplus_wpc_set_booster_en_val,
-	.wpc_set_ext1_wired_otg_en = oplus_wpc_set_ext1_wired_otg_en_val,
-	.wpc_set_ext2_wireless_otg_en = oplus_wpc_set_ext2_wireless_otg_en_val,
-	.wpc_set_rtx_function = oplus_wpc_set_rtx_function,
-	.wpc_set_rtx_function_prepare = oplus_wpc_set_rtx_function_prepare,
-	.wpc_print_log = oplus_wpc_wpc_print_log,
-};
 /*--------------------For OPLUG Interface------------------*/
 
 static int wlchg_driver_probe(struct platform_device *pdev)
@@ -6402,7 +6389,6 @@ static int wlchg_driver_probe(struct platform_device *pdev)
 	struct op_chg_chip *chip;
 	int ret = 0;
 	int boot_mode = 0;
-	struct oplus_wpc_chip *wpc_chip;
 
 	chg_debug(" call \n");
 
@@ -6430,18 +6416,6 @@ static int wlchg_driver_probe(struct platform_device *pdev)
 	}
 
 	g_op_chip = chip;
-
-	/*--------------------For OPLUG Interface------------------*/
-	wpc_chip = devm_kzalloc(&pdev->dev, sizeof(struct oplus_wpc_chip), GFP_KERNEL);
-	if (!wpc_chip) {
-		dev_err(&pdev->dev, "Couldn't allocate memory\n");
-		return -ENOMEM;
-	}
-
-	wpc_chip->dev = &pdev->dev;
-	wpc_chip->wpc_ops = &p922x_ops;
-	oplus_wpc_init(wpc_chip);
-	/*--------------------For OPLUG Interface------------------*/
 
 	wlchg_reset_variables(chip);
 	chip->wlchg_status.dock_on = false;

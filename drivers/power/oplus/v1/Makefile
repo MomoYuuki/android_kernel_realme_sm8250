@@ -1,6 +1,7 @@
 subdir-ccflags-y += -I$(srctree)/$(src)
 
 obj-y      += op_wlchg/
+obj-y      += wireless_ic/
 
 obj-y      += charger_ic/
 obj-y      += gauge_ic/

@@ -83,6 +83,7 @@
 #include "oplus_chg_ops_manager.h"
 #include "oplus_chg_comm.h"
 #include "oplus_pps.h"
+#include "wireless_ic/oplus_chargepump.h"
 #include "op_wlchg_v2/oplus_chg_wls.h"
 #include "oplus_ufcs.h"
 #include "oplus_quirks.h"

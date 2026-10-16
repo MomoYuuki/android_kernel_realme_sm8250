@@ -56,8 +56,8 @@ extern void mt_power_off(void);
 #include "op_chargepump.h"
 
 #define OP20A
-struct chip_chargepump *chargepump_ic;
-int chargepump_reg;
+extern struct chip_chargepump *chargepump_ic;
+extern int chargepump_reg;
 
 #ifdef OP20A
 #define REG_ADDR 0
